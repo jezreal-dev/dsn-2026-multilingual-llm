@@ -1,0 +1,41 @@
+# Python / Bytecode
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Data and Models (large files)
+data/*.csv
+data/*.zip
+data/*.jsonl
+*.zip
+kaggle_output/
+*.bin
+*.pt
+*.safetensors
+*.pth
+
+# Cache and testing
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Logs and checkpoints
+*.log
+runs/
+checkpoint-*/
+results/
+
+# System / OS
+.DS_Store
+Thumbs.db
+*:Zone.Identifier
