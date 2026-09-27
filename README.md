@@ -12,7 +12,7 @@
 
 ## 📌 Executive Summary
 
-This repository contains the end-to-end competition pipeline and submission for the **Data Science Nigeria (DSN) AI Bootcamp 2026 (LLM / Agent Track)**.
+This repository contains the end-to-end competition pipeline and final submission for the **Data Science Nigeria (DSN) AI Bootcamp 2026 (LLM / Agent Track)**.
 
 The task challenges participants to develop a **strictly sub-1B parameter LLM** capable of dual-task execution across four underserved Nigerian languages—**Hausa (`hau`)**, **Igbo (`ibo`)**, **Nigerian Pidgin (`pcm`)**, and **Yoruba (`yor`)**:
 1. **Task A: News Topic Classification** — Categorize articles into 7 discrete topics evaluated via pooled **Macro-F1**.
@@ -20,6 +20,8 @@ The task challenges participants to develop a **strictly sub-1B parameter LLM** 
 
 The final competition metric is the arithmetic mean:
 $$\text{Merged Score} = 0.5 \times \text{Macro-F1 (Task A)} + 0.5 \times \text{GenScore (Task B)}$$
+
+> 💡 **Detailed Engineering Log**: For an exhaustive, version-by-version post-mortem documenting every architectural pivot, bug fix, and empirical failure from Version 1 to Version 12, see [`EXPERIMENT_LOG.md`](EXPERIMENT_LOG.md).
 
 ---
 
@@ -67,8 +69,8 @@ Raw Article Text (Hausa / Igbo / Pidgin / Yoruba)
 * **Training Budget**: 2.0 epochs, Cosine learning rate decay with warmup (`lr = 1.8e-4`), mixed precision `fp16`, effective batch size 16.
 * **Hardware & Runtime**: 1x NVIDIA Tesla T4 GPU on Kaggle, total runtime **~77 minutes**.
 
-### 3. Key Engineering Highlights
-* **Sequential Multi-Task Conditioning**: Rather than forcing single-pass joint generation (which causes attention degradation and severe label leakage), the pipeline predicts the topic first, then sequentially feeds that predicted topic as context into headline generation.
+### 3. Key Engineering Decisions
+* **Sequential Multi-Task Conditioning**: Rather than forcing single-pass joint generation (which causes attention degradation and severe label leakage on sub-1B models), the pipeline predicts the topic first, then sequentially feeds that predicted topic as context into headline generation.
 * **Dual-Key Stratified Class Rebalancing**: Solved minority class starvation across `(language, topic)` pairs (e.g. boosting under-represented categories in Igbo and Yoruba to match Hausa distributions).
 * **Generation Envelope Calibration**: Implemented a constrained decoding window (`max_new_tokens=48`, `min_new_tokens=8`) with soft repetition penalty ($1.15$), preventing diacritic degradation in Yoruba/Igbo while avoiding rigid n-gram bans that break multi-byte African morphology.
 
@@ -79,7 +81,8 @@ Raw Article Text (Hausa / Igbo / Pidgin / Yoruba)
 ```text
 ├── .gitignore
 ├── pyproject.toml                              # Dependency definitions and build tooling
-├── README.md                                   # Project documentation and benchmarks
+├── README.md                                   # Technical overview and benchmarks
+├── EXPERIMENT_LOG.md                           # Comprehensive v1-to-v12 iteration notes
 ├── LICENSE                                     # MIT License
 ├── build_dev_set.py                            # Canonical validation split generator
 ├── validate_submission.py                     # Strict assertion validator for submission.csv
@@ -96,9 +99,9 @@ Raw Article Text (Hausa / Igbo / Pidgin / Yoruba)
 │   └── test_phase3_logic.py                    # Prompting, parsing & rebalancing tests
 ├── docs/                                       # Official competition briefs
 │   └── DSN Bootcamp_LLM Track Project Brief  (2).pdf
-├── kaggle_kernel/                              # Kaggle push deployment manifests
-│   └── kernel-metadata.json
-└── experiments/                                # Development & iteration artifacts
+└── kaggle_kernel/                              # Kaggle deployment configuration
+    ├── kernel-metadata.json
+    └── notebookdc2758c08b.ipynb
 ```
 
 ---

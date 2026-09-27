@@ -1,7 +1,7 @@
 # Python / Bytecode
 __pycache__/
 *.py[cod]
-*.class
+*$py.class
 *.so
 .Python
 
@@ -21,6 +21,13 @@ kaggle_output/
 *.pt
 *.safetensors
 *.pth
+
+# Experiments, scratch, and backups
+experiments/
+scratch/
+*_backup.*
+*.bak
+*~
 
 # Cache and testing
 .pytest_cache/
